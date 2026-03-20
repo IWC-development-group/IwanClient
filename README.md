@@ -7,7 +7,6 @@
 For now Iwan only connects to the local host, but this will be fixed soon.
 
 # TODO
- - Page namespaces;
  - Client-side page caching;
  - The main configuration file;
  - Searching manual pages over the specified repository list.
