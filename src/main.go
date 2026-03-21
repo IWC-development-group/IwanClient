@@ -1,19 +1,20 @@
 package main
 
 import (
-	"os"
-	"io"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
+	"os"
+
 	"github.com/charmbracelet/glamour"
 )
 
 type IwanResponse struct {
-	Status string 		`json: "status"`
-	Name string 		`json: "name"`
-	Namespace string 	`json: "namespace"`
-	Content string 		`json: "content"`
+	Status    string `json: "status"`
+	Name      string `json: "name"`
+	Namespace string `json: "namespace"`
+	Content   string `json: "content"`
 }
 
 func main() {
@@ -38,6 +39,8 @@ func main() {
 		panic(err.Error())
 		os.Exit(0)
 	}
+
+	//XD
 
 	if iwanResponse.Status == "ERR" {
 		fmt.Println("Server returned an error: " + iwanResponse.Content)
