@@ -2,42 +2,42 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
 )
 
-func PingServer(ip string, port int, ctx *context.Context) bool {
-	address := "http://" + ip + ":" + strconv.Itoa(port)
-
+func GetResponse(ip string, port int, ctx *context.Context, request string) (*http.Response, bool) {
+	address := "http://" + ip + ":" + strconv.Itoa(port) + "?name=" + request
 	fmt.Println("Pinging: " + address)
 	req, err := http.NewRequestWithContext(*ctx, "GET", address, nil)
 	if err != nil {
 		fmt.Println("Create request failed")
-		return false
+		return nil, false
 	}
-	client := http.Client{Timeout: 5 * time.Second}
+	client := http.Client{Timeout: 3 * time.Second}
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Connection failed")
-		return false
+		return nil, false
 	}
-	defer resp.Body.Close()
 
 	fmt.Println("Connection success for " + ip)
-	return true
+	return resp, true
 }
 
-func GetWorkingServer(c *Configurator) (string, error) {
+func TryAllServers(c *Configurator, request string) (IwanResponse, error) {
 	var wg sync.WaitGroup
 	wg.Add(len(c.IPS))
 
 	var mutex sync.Mutex
-
-	var foundedIp string = ""
 	var closeCh chan bool = make(chan bool, len(c.IPS))
+
+	var res IwanResponse
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -53,20 +53,37 @@ func GetWorkingServer(c *Configurator) (string, error) {
 
 	for _, ip := range c.IPS {
 		go func(ipAddr string) {
-			status := PingServer(ipAddr, c.Port, &ctx)
+			resp, status := GetResponse(ipAddr, c.Port, &ctx, request)
 			if status {
 				mutex.Lock()
-				foundedIp = ipAddr
+
+				content, err := io.ReadAll(resp.Body)
+				if err != nil {
+					panic(err.Error())
+				}
+
+				var iwanResponse IwanResponse
+				unmarshalError := json.Unmarshal(content, &iwanResponse)
+				if unmarshalError != nil {
+					panic(unmarshalError.Error())
+				}
+
+				if iwanResponse.Status == "ERR" {
+					fmt.Println("Server returned an error: " + iwanResponse.Content)
+				} else {
+					res = iwanResponse
+					closeCh <- true
+				}
+
 				mutex.Unlock()
 			}
-			closeCh <- status
 			wg.Done()
 		}(ip)
 	}
 
 	wg.Wait()
-	if foundedIp == "" {
-		return "", fmt.Errorf("No servers response")
+	if res == (IwanResponse{}) {
+		return res, fmt.Errorf("No servers response")
 	}
-	return foundedIp, nil
+	return res, nil
 }
