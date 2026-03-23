@@ -1,13 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
-	"os"
-
-	"github.com/charmbracelet/glamour"
+	//"github.com/spf13/cobra"
 )
 
 type IwanResponse struct {
@@ -20,7 +15,15 @@ type IwanResponse struct {
 func main() {
 	initTerminalOutput()
 
-	requestedPage := os.Args[1]
+	configurator := NewConfigurator()
+	configurator.InitConfig()
+	ip, err := GetWorkingServer(configurator)
+	if err != nil {
+		panic("Can't found opened server")
+	}
+	fmt.Println("Founded working ip: " + ip)
+
+	/*requestedPage := os.Args[1]
 	response, err := http.Get("http://localhost:8080?name=" + requestedPage)
 	if err != nil {
 		panic(err.Error())
@@ -30,21 +33,18 @@ func main() {
 	content, err := io.ReadAll(response.Body)
 	if err != nil {
 		panic(err.Error())
-		os.Exit(0)
 	}
 
 	var iwanResponse IwanResponse
 	unmarshalError := json.Unmarshal(content, &iwanResponse)
 	if unmarshalError != nil {
-		panic(err.Error())
-		os.Exit(0)
+		panic(unmarshalError.Error())
 	}
 
 	//XD
 
 	if iwanResponse.Status == "ERR" {
 		fmt.Println("Server returned an error: " + iwanResponse.Content)
-		os.Exit(0)
 	}
 
 	renderer, _ := glamour.NewTermRenderer(
@@ -53,5 +53,5 @@ func main() {
 	)
 
 	result, _ := renderer.Render(iwanResponse.Content)
-	fmt.Printf("%s (%s)\n---\n%s\n", iwanResponse.Name, iwanResponse.Namespace, result)
+	fmt.Printf("%s (%s)\n---\n%s\n", iwanResponse.Name, iwanResponse.Namespace, result)*/
 }
