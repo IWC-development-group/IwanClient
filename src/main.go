@@ -30,7 +30,7 @@ func main() {
 
 	renderer, _ := glamour.NewTermRenderer(
 		glamour.WithAutoStyle(),
-		glamour.WithWordWrap(80),
+		glamour.WithWordWrap(120),
 	)
 
 	result, _ := renderer.Render(response.Content)
