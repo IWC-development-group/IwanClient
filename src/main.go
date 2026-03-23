@@ -18,10 +18,15 @@ type IwanResponse struct {
 }
 
 func main() {
+	configurator := NewConfigurator()
+	configurator.InitConfig()
+
+	//
+
 	initTerminalOutput()
 
 	requestedPage := os.Args[1]
-	response, err := http.Get("http://localhost:8080?name=" + requestedPage)
+	response, err := http.Get("http://26.70.26.159:8080?name=" + requestedPage)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -30,21 +35,18 @@ func main() {
 	content, err := io.ReadAll(response.Body)
 	if err != nil {
 		panic(err.Error())
-		os.Exit(0)
 	}
 
 	var iwanResponse IwanResponse
 	unmarshalError := json.Unmarshal(content, &iwanResponse)
 	if unmarshalError != nil {
-		panic(err.Error())
-		os.Exit(0)
+		panic(unmarshalError.Error())
 	}
 
 	//XD
 
 	if iwanResponse.Status == "ERR" {
 		fmt.Println("Server returned an error: " + iwanResponse.Content)
-		os.Exit(0)
 	}
 
 	renderer, _ := glamour.NewTermRenderer(
