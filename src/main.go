@@ -1,13 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
-	"os"
-
-	"github.com/charmbracelet/glamour"
+	//"github.com/spf13/cobra"
 )
 
 type IwanResponse struct {
@@ -18,15 +13,18 @@ type IwanResponse struct {
 }
 
 func main() {
-	configurator := NewConfigurator()
-	configurator.InitConfig()
-
-	//
-
 	initTerminalOutput()
 
-	requestedPage := os.Args[1]
-	response, err := http.Get("http://26.70.26.159:8080?name=" + requestedPage)
+	configurator := NewConfigurator()
+	configurator.InitConfig()
+	ip, err := GetWorkingServer(configurator)
+	if err != nil {
+		panic("Can't found opened server")
+	}
+	fmt.Println("Founded working ip: " + ip)
+
+	/*requestedPage := os.Args[1]
+	response, err := http.Get("http://localhost:8080?name=" + requestedPage)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -55,5 +53,5 @@ func main() {
 	)
 
 	result, _ := renderer.Render(iwanResponse.Content)
-	fmt.Printf("%s (%s)\n---\n%s\n", iwanResponse.Name, iwanResponse.Namespace, result)
+	fmt.Printf("%s (%s)\n---\n%s\n", iwanResponse.Name, iwanResponse.Namespace, result)*/
 }
