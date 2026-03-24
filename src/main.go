@@ -1,38 +1,31 @@
 package main
 
-import (
-	"fmt"
-	"os"
+import "iwan/src/cmd"
 
-	"github.com/charmbracelet/glamour"
-	//"github.com/spf13/cobra"
-)
-
-type IwanResponse struct {
-	Status    string `json: "status"`
-	Name      string `json: "name"`
-	Namespace string `json: "namespace"`
-	Content   string `json: "content"`
-}
+//"github.com/charmbracelet/glamour"
+//"github.com/spf13/cobra"
 
 func main() {
-	initTerminalOutput()
+	cmd.Execute()
 
-	configurator := NewConfigurator()
-	configurator.InitConfig()
+	/*
+		initTerminalOutput()
 
-	requestedPage := os.Args[1]
+		configurator := NewConfigurator()
+		configurator.InitConfig()
 
-	response, err := TryAllServers(configurator, requestedPage)
-	if err != nil {
-		panic("No results")
-	}
+		requestedPage := os.Args[1]
 
-	renderer, _ := glamour.NewTermRenderer(
-		glamour.WithAutoStyle(),
-		glamour.WithWordWrap(120),
-	)
+		response, err := TryAllServers(configurator, requestedPage)
+		if err != nil {
+			panic("No results")
+		}
 
-	result, _ := renderer.Render(response.Content)
-	fmt.Printf("%s (%s)\n---\n%s\n", response.Name, response.Namespace, result)
+		renderer, _ := glamour.NewTermRenderer(
+			glamour.WithAutoStyle(),
+			glamour.WithWordWrap(120),
+		)
+
+		result, _ := renderer.Render(response.Content)
+		fmt.Printf("%s (%s)\n---\n%s\n", response.Name, response.Namespace, result)*/
 }
