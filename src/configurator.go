@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path"
+	"path/filepath"
 	"strconv"
 )
 
@@ -27,12 +29,17 @@ func NewConfigurator() *Configurator {
 }
 
 func (c *Configurator) InitConfig() {
-	_, err := os.Stat("./Config/IwanConfig.json")
+	pathToEx, err := os.Executable()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	_, err = os.Stat(path.Join(filepath.Dir(pathToEx), "Config/IwanConfig.json"))
 	if os.IsNotExist(err) {
 		InitFiles()
 	}
 
-	jsonData, err := os.ReadFile("./Config/IwanConfig.json")
+	jsonData, err := os.ReadFile(path.Join(filepath.Dir(pathToEx), "Config/IwanConfig.json"))
 	if err != nil {
 		panic("Error read config file")
 	}
@@ -46,12 +53,17 @@ func (c *Configurator) InitConfig() {
 }
 
 func InitFiles() {
-	err := os.MkdirAll("./Config", 0755)
+	pathToEx, err := os.Executable()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = os.MkdirAll(path.Join(filepath.Dir(pathToEx), "Config"), 0755)
 	if err != nil {
 		panic("Can't create config directory" + err.Error())
 	}
 
-	mainConfigFile, err := os.Create("./Config/IwanConfig.json")
+	mainConfigFile, err := os.Create(path.Join(filepath.Dir(pathToEx), "Config/IwanConfig.json"))
 	if err != nil {
 		panic("Can't create main configuration file" + err.Error())
 	}
