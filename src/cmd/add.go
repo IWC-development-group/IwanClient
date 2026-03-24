@@ -9,6 +9,7 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add new URL in config file",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		iwanCore.NewConfigurator().AddUrl(args[0])
 	},
