@@ -10,18 +10,13 @@ import (
 )
 
 var (
-	BaseIPS = [...]string{
-		"localhost",
+	BaseURLS = []string{
+		"http://localhost:8080",
 	}
 )
 
-const (
-	BasePort = 8080
-)
-
 type Configurator struct {
-	IPS  []string `json:"IPS"`
-	Port int      `json:"Port`
+	URLS []string `json:"URLS"`
 }
 
 func NewConfigurator() *Configurator {
@@ -70,8 +65,7 @@ func InitFiles() {
 	defer mainConfigFile.Close()
 
 	base := Configurator{
-		IPS:  BaseIPS[:],
-		Port: BasePort,
+		URLS: BaseURLS,
 	}
 
 	jsonData, err := json.MarshalIndent(base, "", "	")

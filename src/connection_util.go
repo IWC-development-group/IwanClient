@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"sync"
 	"time"
 )
 
-func GetResponse(ip string, port int, ctx *context.Context, request string) (*http.Response, bool) {
-	address := "http://" + ip + ":" + strconv.Itoa(port) + "?name=" + request
+func GetResponse(url string, ctx *context.Context, request string) (*http.Response, bool) {
+	address := url + "?name=" + request
 	fmt.Println("Pinging: " + address)
 	req, err := http.NewRequestWithContext(*ctx, "GET", address, nil)
 	if err != nil {
@@ -26,16 +25,16 @@ func GetResponse(ip string, port int, ctx *context.Context, request string) (*ht
 		return nil, false
 	}
 
-	fmt.Println("Connection success for " + ip)
+	fmt.Println("Connection success for " + url)
 	return resp, true
 }
 
 func TryAllServers(c *Configurator, request string) (IwanResponse, error) {
 	var wg sync.WaitGroup
-	wg.Add(len(c.IPS))
+	wg.Add(len(c.URLS))
 
 	var mutex sync.Mutex
-	var closeCh chan bool = make(chan bool, len(c.IPS))
+	var closeCh chan bool = make(chan bool, len(c.URLS))
 
 	var res IwanResponse
 
@@ -51,9 +50,9 @@ func TryAllServers(c *Configurator, request string) (IwanResponse, error) {
 		}
 	}()
 
-	for _, ip := range c.IPS {
-		go func(ipAddr string) {
-			resp, status := GetResponse(ipAddr, c.Port, &ctx, request)
+	for _, url := range c.URLS {
+		go func(urlAdr string) {
+			resp, status := GetResponse(urlAdr, &ctx, request)
 			if status {
 				mutex.Lock()
 
@@ -78,7 +77,7 @@ func TryAllServers(c *Configurator, request string) (IwanResponse, error) {
 				mutex.Unlock()
 			}
 			wg.Done()
-		}(ip)
+		}(url)
 	}
 
 	wg.Wait()
