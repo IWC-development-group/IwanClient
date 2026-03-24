@@ -1,17 +1,16 @@
 package cmd
 
 import (
-	"fmt"
+	"iwan/src/internal/iwanCore"
 
 	"github.com/spf13/cobra"
 )
 
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "Brief",
-	Long:  "Long Brief",
+	Short: "Add new URL in config file",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Тут типа поиск будет")
+		iwanCore.NewConfigurator().AddUrl(args[0])
 	},
 }
 

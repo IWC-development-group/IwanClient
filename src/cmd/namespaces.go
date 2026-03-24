@@ -10,8 +10,7 @@ import (
 
 var namespacesCmd = &cobra.Command{
 	Use:   "namespaces",
-	Short: "Brief",
-	Long:  "Long Brief",
+	Short: "Get all available namespaces on the server",
 	Run: func(cmd *cobra.Command, args []string) {
 		iwanCore.InitTerminalOutput()
 
@@ -27,17 +26,17 @@ var namespacesCmd = &cobra.Command{
 
 		renderer, _ := glamour.NewTermRenderer(
 			glamour.WithAutoStyle(),
-			glamour.WithWordWrap(120),
+			glamour.WithWordWrap(defaultWidth),
 		)
 
-		resNamespaces := ""
+		resNamespaces := "# Available namespaces:\n"
 
 		for _, value := range response.Namespaces {
-			resNamespaces += value + "\n"
+			resNamespaces += "- " + value + "\n"
 		}
 
 		result, _ := renderer.Render(resNamespaces)
-		fmt.Printf("%s (%s)\n---\n%s\n", response.Name, response.Namespace, result)
+		fmt.Printf("%s", result)
 	},
 }
 

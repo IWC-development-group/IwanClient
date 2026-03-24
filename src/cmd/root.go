@@ -11,8 +11,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "IwanClient",
-	Short: "Brief",
-	Long:  "Long Brief",
+	Short: "Search for documentation via namespace/name (Example: iwan gl4/glBindBuffer)",
 	Args:  cobra.ArbitraryArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		iwanCore.InitTerminalOutput()
@@ -29,7 +28,7 @@ var rootCmd = &cobra.Command{
 
 		renderer, _ := glamour.NewTermRenderer(
 			glamour.WithAutoStyle(),
-			glamour.WithWordWrap(120),
+			glamour.WithWordWrap(defaultWidth),
 		)
 
 		result, _ := renderer.Render(response.Content)

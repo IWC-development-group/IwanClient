@@ -11,8 +11,7 @@ import (
 
 var pagesCmd = &cobra.Command{
 	Use:   "pages",
-	Short: "Brief",
-	Long:  "Long Brief",
+	Short: "Get all the available pages in the selected namespace (Example: iwan pages gl4)",
 	Run: func(cmd *cobra.Command, args []string) {
 		iwanCore.InitTerminalOutput()
 
@@ -27,17 +26,17 @@ var pagesCmd = &cobra.Command{
 
 		renderer, _ := glamour.NewTermRenderer(
 			glamour.WithAutoStyle(),
-			glamour.WithWordWrap(120),
+			glamour.WithWordWrap(defaultWidth),
 		)
 
-		resPages := ""
+		resPages := "# Namespace: " + response.Namespace + "\n## Available pages:\n"
 
 		for _, value := range response.Pages {
-			resPages += value + "\n"
+			resPages += "- " + value + "\n"
 		}
 
 		result, _ := renderer.Render(resPages)
-		fmt.Printf("%s (%s)\n---\n%s\n", response.Name, response.Namespace, result)
+		fmt.Printf("%s", result)
 	},
 }
 
