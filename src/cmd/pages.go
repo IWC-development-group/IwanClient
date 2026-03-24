@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"iwan/src/internal/iwanCore"
-	"os"
 
 	"github.com/charmbracelet/glamour"
 	"github.com/spf13/cobra"
@@ -12,13 +11,14 @@ import (
 var pagesCmd = &cobra.Command{
 	Use:   "pages",
 	Short: "Get all the available pages in the selected namespace (Example: iwan pages gl4)",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		iwanCore.InitTerminalOutput()
 
 		configurator := iwanCore.NewConfigurator()
 		configurator.InitConfig()
 
-		requestedPage := apiPages + os.Args[2]
+		requestedPage := apiPages + args[0]
 		response, err := iwanCore.TryAllServers(configurator, requestedPage)
 		if err != nil {
 			iwanCore.Log("No results")

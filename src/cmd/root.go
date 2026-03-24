@@ -12,14 +12,19 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "IwanClient",
 	Short: "Search for documentation via namespace/name (Example: iwan gl4/glBindBuffer)",
-	Args:  cobra.ArbitraryArgs,
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			fmt.Println("Welcome to IwanClient! Type --help for usage")
+			os.Exit(0)
+		}
+
 		iwanCore.InitTerminalOutput()
 
 		configurator := iwanCore.NewConfigurator()
 		configurator.InitConfig()
 
-		requestedPage := apiSearch + os.Args[1]
+		requestedPage := apiSearch + args[0]
 
 		response, err := iwanCore.TryAllServers(configurator, requestedPage)
 		if err != nil {
