@@ -11,8 +11,10 @@ type Configurator struct {
 }
 
 type IwanResponse struct {
-	Status    string `json: "status"`
-	Name      string `json: "name"`
-	Namespace string `json: "namespace"`
-	Content   string `json: "content"`
+	Status     string   `json: "status"`
+	Name       string   `json: "name"`
+	Namespace  string   `json: "namespace"`
+	Content    string   `json: "content"`
+	Pages      []string `json: "pages"`
+	Namespaces []string `json: "namespaces"`
 }

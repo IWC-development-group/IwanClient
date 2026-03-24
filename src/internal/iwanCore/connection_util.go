@@ -12,7 +12,7 @@ import (
 )
 
 func GetResponse(url string, ctx *context.Context, request string) (*http.Response, bool) {
-	address := url + "?name=" + request
+	address := url + request
 
 	Log("Pinging: " + address)
 
@@ -85,7 +85,7 @@ func TryAllServers(c *Configurator, request string) (IwanResponse, error) {
 	}
 
 	wg.Wait()
-	if res == (IwanResponse{}) {
+	if res.Status == "" {
 		return res, fmt.Errorf("No servers response")
 	}
 	return res, nil
