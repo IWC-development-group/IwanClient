@@ -2,6 +2,7 @@ package iwanCore
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path"
 	"path/filepath"
@@ -10,6 +11,33 @@ import (
 
 func NewConfigurator() *Configurator {
 	return &Configurator{}
+}
+
+func (c *Configurator) AddUrl(URL string) {
+	c.InitConfig()
+	c.URLS = append(c.URLS, URL)
+
+	pathToEx, err := os.Executable()
+	if err != nil {
+		Log(err.Error())
+		os.Exit(1)
+	}
+
+	_, err = os.Stat(path.Join(filepath.Dir(pathToEx), "Config/IwanConfig.json"))
+	if os.IsNotExist(err) {
+		fmt.Println("Unknown error!")
+		os.Exit(1)
+	}
+
+	updatedData, err := json.MarshalIndent(c, "", "	")
+
+	err = os.WriteFile(path.Join(filepath.Dir(pathToEx), "Config/IwanConfig.json"), updatedData, 0755)
+	if err != nil {
+		fmt.Println("Error write config file")
+		os.Exit(1)
+	}
+
+	fmt.Println("Successfully added new URL!")
 }
 
 func (c *Configurator) InitConfig() {
