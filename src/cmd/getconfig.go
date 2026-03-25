@@ -13,7 +13,7 @@ var configCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		iwanCore.InitTerminalOutput()
 
-		iwanFormatting.Render(iwanCore.IwanResponse{}, CONFIG_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{
+		iwanFormatting.Render([]iwanCore.IwanResponse{}, CONFIG_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{
 			Status:     true,
 			Name:       true,
 			Namespace:  true,
@@ -22,7 +22,7 @@ var configCmd = &cobra.Command{
 	},
 }
 
-func CONFIG_FORMAT(content iwanCore.IwanResponse, params iwanFormatting.RenderParams) string {
+func CONFIG_FORMAT(content []iwanCore.IwanResponse, params iwanFormatting.RenderParams) string {
 	configurator := iwanCore.NewConfigurator()
 	configurator.InitConfig()
 

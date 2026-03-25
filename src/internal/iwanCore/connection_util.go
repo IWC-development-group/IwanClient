@@ -32,14 +32,14 @@ func GetResponse(url string, ctx *context.Context, request string) (*http.Respon
 	return resp, true
 }
 
-func TryAllServers(c *Configurator, request string) (IwanResponse, error) {
+func TryAllServers(c *Configurator, request string, collectAll bool) ([]IwanResponse, error) {
 	var wg sync.WaitGroup
 	wg.Add(len(c.URLS))
 
 	var mutex sync.Mutex
 	var closeCh chan bool = make(chan bool, len(c.URLS))
 
-	var res IwanResponse
+	var res []IwanResponse
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -74,8 +74,11 @@ func TryAllServers(c *Configurator, request string) (IwanResponse, error) {
 				if iwanResponse.Status == "ERR" {
 					Log("Server returned an error: " + iwanResponse.Content)
 				} else {
-					res = iwanResponse
-					closeCh <- true
+					iwanResponse.Address = urlAdr
+					res = append(res, iwanResponse)
+					if !collectAll {
+						closeCh <- true
+					}
 				}
 
 				mutex.Unlock()
@@ -85,7 +88,7 @@ func TryAllServers(c *Configurator, request string) (IwanResponse, error) {
 	}
 
 	wg.Wait()
-	if res.Status == "" {
+	if res[0].Status == "" {
 		return res, fmt.Errorf("No servers response")
 	}
 	return res, nil

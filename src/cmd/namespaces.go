@@ -18,7 +18,7 @@ var namespacesCmd = &cobra.Command{
 
 		requestedPage := apiNamespaces
 
-		response, err := iwanCore.TryAllServers(configurator, requestedPage)
+		response, err := iwanCore.TryAllServers(configurator, requestedPage, true)
 		if err != nil {
 			iwanCore.Log("No results")
 		}

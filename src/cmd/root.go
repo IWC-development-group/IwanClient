@@ -26,7 +26,7 @@ var rootCmd = &cobra.Command{
 
 		requestedPage := apiSearch + args[0]
 
-		response, err := iwanCore.TryAllServers(configurator, requestedPage)
+		response, err := iwanCore.TryAllServers(configurator, requestedPage, false)
 		if err != nil {
 			iwanCore.Log("No results")
 		}

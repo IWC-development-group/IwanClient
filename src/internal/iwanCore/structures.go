@@ -17,4 +17,5 @@ type IwanResponse struct {
 	Content    string   `json: "content"`
 	Pages      []string `json: "pages"`
 	Namespaces []string `json: "namespaces"`
+	Address    string
 }

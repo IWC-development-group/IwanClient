@@ -18,7 +18,7 @@ var pagesCmd = &cobra.Command{
 		configurator.InitConfig()
 
 		requestedPage := apiPages + args[0]
-		response, err := iwanCore.TryAllServers(configurator, requestedPage)
+		response, err := iwanCore.TryAllServers(configurator, requestedPage, true)
 		if err != nil {
 			iwanCore.Log("No results")
 		}

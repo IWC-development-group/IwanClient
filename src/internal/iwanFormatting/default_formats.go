@@ -21,41 +21,50 @@ func DEFAULT_MD_RENDER(content string) {
 
 //Format
 
-func header_format(content iwanCore.IwanResponse, params RenderParams) string {
+func header_format(contents []iwanCore.IwanResponse, params RenderParams) string {
 	result := ""
-	if params.Name && params.Namespace {
-		result += content.Name + "(" + content.Namespace + ")"
-	} else if params.Name {
-		result += content.Name
-	}
 
-	if params.Status {
-		result += " " + content.Status + "\n"
+	for _, content := range contents {
+		if params.Name && params.Namespace {
+			result += content.Name + "(" + content.Namespace + ")"
+		} else if params.Name {
+			result += content.Name
+		}
+
+		if params.Status {
+			result += " " + content.Status + "\n"
+		}
 	}
 	return result
 }
 
-func DEFAULT_FORMAT(content iwanCore.IwanResponse, params RenderParams) string {
-	result := header_format(content, params)
-	result += "\n---\n" + content.Content
+func DEFAULT_FORMAT(contents []iwanCore.IwanResponse, params RenderParams) string {
+	result := header_format(contents, params)
+	for _, content := range contents {
+		result += "\n---\n" + content.Content + "\n"
+		result += "## Answer from: " + content.Address + "\n"
+	}
 	return result
 }
 
-func LIST_FORMAT(content iwanCore.IwanResponse, params RenderParams) string {
-	result := header_format(content, params)
+func LIST_FORMAT(contents []iwanCore.IwanResponse, params RenderParams) string {
+	result := header_format(contents, params)
 
-	if params.Namespaces {
-		result += "# Available namespaces:\n"
-		for _, value := range content.Namespaces {
-			result += "- " + value + "\n"
+	for _, content := range contents {
+		if params.Namespaces {
+			result += "# Available namespaces:\n"
+			for _, value := range content.Namespaces {
+				result += "- " + value + "\n"
+			}
 		}
-	}
 
-	if params.Pages {
-		result += "# Namespace: " + content.Namespace + "\n## Available pages:\n"
-		for _, value := range content.Pages {
-			result += "- " + value + "\n"
+		if params.Pages {
+			result += "# Namespace: " + content.Namespace + "\n## Available pages:\n"
+			for _, value := range content.Pages {
+				result += "- " + value + "\n"
+			}
 		}
+		result += "## Answer from: " + content.Address + "\n"
 	}
 
 	return result
