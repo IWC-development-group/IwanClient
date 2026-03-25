@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"iwan/src/internal/iwanCore"
+	"iwan/src/internal/iwanFormatting"
 
-	"github.com/charmbracelet/glamour"
 	"github.com/spf13/cobra"
 )
 
@@ -24,19 +23,12 @@ var namespacesCmd = &cobra.Command{
 			iwanCore.Log("No results")
 		}
 
-		renderer, _ := glamour.NewTermRenderer(
-			glamour.WithAutoStyle(),
-			glamour.WithWordWrap(defaultWidth),
-		)
-
-		resNamespaces := "# Available namespaces:\n"
-
-		for _, value := range response.Namespaces {
-			resNamespaces += "- " + value + "\n"
-		}
-
-		result, _ := renderer.Render(resNamespaces)
-		fmt.Printf("%s", result)
+		iwanFormatting.Render(response, iwanFormatting.LIST_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{
+			Status:     false,
+			Name:       false,
+			Namespace:  false,
+			Namespaces: true,
+		})
 	},
 }
 

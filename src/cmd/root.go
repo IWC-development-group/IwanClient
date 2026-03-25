@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 	"iwan/src/internal/iwanCore"
+	"iwan/src/internal/iwanFormatting"
 	"os"
 
-	"github.com/charmbracelet/glamour"
 	"github.com/spf13/cobra"
 )
 
@@ -31,13 +31,11 @@ var rootCmd = &cobra.Command{
 			iwanCore.Log("No results")
 		}
 
-		renderer, _ := glamour.NewTermRenderer(
-			glamour.WithAutoStyle(),
-			glamour.WithWordWrap(defaultWidth),
-		)
-
-		result, _ := renderer.Render(response.Content)
-		fmt.Printf("%s (%s)\n---\n%s\n", response.Name, response.Namespace, result)
+		iwanFormatting.Render(response, iwanFormatting.DEFAULT_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{
+			Status:    true,
+			Name:      true,
+			Namespace: true,
+		})
 	},
 }
 
