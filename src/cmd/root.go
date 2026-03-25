@@ -28,7 +28,8 @@ var rootCmd = &cobra.Command{
 
 		response, err := iwanCore.TryAllServers(configurator, requestedPage, false)
 		if err != nil {
-			iwanCore.Log("No results")
+			fmt.Println("No results")
+			os.Exit(1)
 		}
 
 		iwanFormatting.Render(response, iwanFormatting.DEFAULT_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{

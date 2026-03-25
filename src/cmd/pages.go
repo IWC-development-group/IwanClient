@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"iwan/src/internal/iwanCore"
 	"iwan/src/internal/iwanFormatting"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -20,7 +22,8 @@ var pagesCmd = &cobra.Command{
 		requestedPage := apiPages + args[0]
 		response, err := iwanCore.TryAllServers(configurator, requestedPage, true)
 		if err != nil {
-			iwanCore.Log("No results")
+			fmt.Println("No results")
+			os.Exit(1)
 		}
 
 		iwanFormatting.Render(response, iwanFormatting.LIST_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{
