@@ -88,7 +88,7 @@ func TryAllServers(c *Configurator, request string, collectAll bool) ([]IwanResp
 	}
 
 	wg.Wait()
-	if res[0].Status == "" {
+	if len(res) == 0 {
 		return res, fmt.Errorf("No servers response")
 	}
 	return res, nil
