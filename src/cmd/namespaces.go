@@ -26,11 +26,15 @@ var namespacesCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		iwanFormatting.Render(response, iwanFormatting.LIST_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{
+		iwanFormatting.Render(response, iwanFormatting.LIST_FORMAT, iwanFormatting.DEFAULT_RENDER, iwanFormatting.RenderParams{
 			Status:     false,
 			Name:       false,
 			Namespace:  false,
 			Namespaces: true,
+		}, iwanFormatting.FormatStringParams{
+			HeaderMD:  true,
+			ContentMD: false,
+			FooterMD:  true,
 		})
 	},
 }

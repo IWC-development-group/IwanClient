@@ -32,10 +32,14 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		iwanFormatting.Render(response, iwanFormatting.DEFAULT_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{
-			Status:    true,
+		iwanFormatting.Render(response, iwanFormatting.DEFAULT_FORMAT, iwanFormatting.DEFAULT_RENDER, iwanFormatting.RenderParams{
+			Status:    false,
 			Name:      true,
 			Namespace: true,
+		}, iwanFormatting.FormatStringParams{
+			HeaderMD:  true,
+			ContentMD: true,
+			FooterMD:  true,
 		})
 	},
 }

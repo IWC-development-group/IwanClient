@@ -13,26 +13,26 @@ var configCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		iwanCore.InitTerminalOutput()
 
-		iwanFormatting.Render([]iwanCore.IwanResponse{}, CONFIG_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{
-			Status:     true,
-			Name:       true,
-			Namespace:  true,
-			Namespaces: true,
+		iwanFormatting.Render([]iwanCore.IwanResponse{}, CONFIG_FORMAT, iwanFormatting.DEFAULT_RENDER, iwanFormatting.RenderParams{}, iwanFormatting.FormatStringParams{
+			HeaderMD:  true,
+			ContentMD: true,
+			FooterMD:  true,
 		})
 	},
 }
 
-func CONFIG_FORMAT(content []iwanCore.IwanResponse, params iwanFormatting.RenderParams) string {
+func CONFIG_FORMAT(content []iwanCore.IwanResponse, params iwanFormatting.RenderParams) []iwanFormatting.FormatString {
 	configurator := iwanCore.NewConfigurator()
 	configurator.InitConfig()
 
-	resUrls := "# Current URLS:\n"
+	header := "# Current URLS:"
+	resUrls := ""
 
 	for _, value := range configurator.URLS {
 		resUrls += "- " + value + "\n"
 	}
 
-	return resUrls
+	return []iwanFormatting.FormatString{{header, resUrls, ""}}
 }
 
 func init() {
