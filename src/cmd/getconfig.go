@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"iwan/src/internal/iwanCore"
+	"iwan/src/internal/iwanFormatting"
 
-	"github.com/charmbracelet/glamour"
 	"github.com/spf13/cobra"
 )
 
@@ -14,23 +13,26 @@ var configCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		iwanCore.InitTerminalOutput()
 
-		configurator := iwanCore.NewConfigurator()
-		configurator.InitConfig()
-
-		renderer, _ := glamour.NewTermRenderer(
-			glamour.WithAutoStyle(),
-			glamour.WithWordWrap(defaultWidth),
-		)
-
-		resUrls := "# Current URLS:\n"
-
-		for _, value := range configurator.URLS {
-			resUrls += "- " + value + "\n"
-		}
-
-		result, _ := renderer.Render(resUrls)
-		fmt.Printf("%s", result)
+		iwanFormatting.Render([]iwanCore.IwanResponse{}, CONFIG_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{
+			Status:     true,
+			Name:       true,
+			Namespace:  true,
+			Namespaces: true,
+		})
 	},
+}
+
+func CONFIG_FORMAT(content []iwanCore.IwanResponse, params iwanFormatting.RenderParams) string {
+	configurator := iwanCore.NewConfigurator()
+	configurator.InitConfig()
+
+	resUrls := "# Current URLS:\n"
+
+	for _, value := range configurator.URLS {
+		resUrls += "- " + value + "\n"
+	}
+
+	return resUrls
 }
 
 func init() {

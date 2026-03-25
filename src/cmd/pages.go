@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"iwan/src/internal/iwanCore"
+	"iwan/src/internal/iwanFormatting"
 
-	"github.com/charmbracelet/glamour"
 	"github.com/spf13/cobra"
 )
 
@@ -19,24 +18,17 @@ var pagesCmd = &cobra.Command{
 		configurator.InitConfig()
 
 		requestedPage := apiPages + args[0]
-		response, err := iwanCore.TryAllServers(configurator, requestedPage)
+		response, err := iwanCore.TryAllServers(configurator, requestedPage, true)
 		if err != nil {
 			iwanCore.Log("No results")
 		}
 
-		renderer, _ := glamour.NewTermRenderer(
-			glamour.WithAutoStyle(),
-			glamour.WithWordWrap(defaultWidth),
-		)
-
-		resPages := "# Namespace: " + response.Namespace + "\n## Available pages:\n"
-
-		for _, value := range response.Pages {
-			resPages += "- " + value + "\n"
-		}
-
-		result, _ := renderer.Render(resPages)
-		fmt.Printf("%s", result)
+		iwanFormatting.Render(response, iwanFormatting.LIST_FORMAT, iwanFormatting.DEFAULT_MD_RENDER, iwanFormatting.RenderParams{
+			Status:    false,
+			Name:      false,
+			Namespace: false,
+			Pages:     true,
+		})
 	},
 }
 
