@@ -10,7 +10,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "IwanClient",
+	Use:   "iwan",
 	Short: "Search for documentation via namespace/name (Example: iwan gl4/glBindBuffer)",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
