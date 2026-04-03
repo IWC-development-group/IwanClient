@@ -1,7 +1,9 @@
 package iwanFormatting
 
 const (
-	defaultWidth int = 90
+	defaultWidth 		int = 90
+	defaultWidthScale	float64 = 0.715
+	defaultBorder		int = 120
 )
 
 type RenderParams struct {

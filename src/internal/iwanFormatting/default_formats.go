@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"iwan/src/internal/iwanCore"
 	"strings"
+//	"math"
+	"os"
 
+	"golang.org/x/term"
 	"github.com/charmbracelet/glamour"
 )
 
@@ -13,7 +16,7 @@ import (
 func DEFAULT_RENDER(contents []FormatString, params FormatStringParams) {
 	renderer, _ := glamour.NewTermRenderer(
 		glamour.WithAutoStyle(),
-		glamour.WithWordWrap(defaultWidth),
+		glamour.WithWordWrap(calculateWidth()),
 	)
 
 	for _, content := range contents {
@@ -128,4 +131,20 @@ func calc_column(col *int, count int) {
 		*col = 3
 	}
 	//fmt.Println("size: " + strconv.Itoa(*col))
+}
+
+func calculateWidth() int {
+	terminal := int(os.Stdout.Fd())
+	if !term.IsTerminal(terminal) {
+		return defaultWidth
+	}
+
+	width, _, err := term.GetSize(terminal)
+	if err != nil {
+		panic(err)
+		return defaultWidth
+	}
+
+	if width <= defaultBorder { return width }
+	return int(float64(width) * defaultWidthScale)
 }
